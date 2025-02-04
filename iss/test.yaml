@@ -1,0 +1,28 @@
+---
+- name: Playbook that sends HTTP GET to target URI
+  hosts: localhost
+  connection: local
+  gather_facts: true
+
+  vars:
+    # define NHL API
+    urltolookup: "http://api.citybik.es/v2/networks"
+
+  tasks:
+  - name: Lookup API with uri module
+    ansible.builtin.uri:
+      url: "{{ urltolookup }}"
+      method: GET
+    register: results    # save the JSON sent back by our script
+
+  - name: Print out the keys within the returned JSON
+    ansible.builtin.debug:
+      msg: "{{results}}"
+ 
+  - name: Slice the variable further to only return the JSON
+    ansible.builtin.debug:
+      msg: "{{results.get('json')}}"
+
+  - name: Use debug with a loop across the JSON data
+    ansible.builtin.debug:
+
